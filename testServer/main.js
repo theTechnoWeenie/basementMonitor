@@ -21,9 +21,8 @@ function handleRequest(request, response){
     outputStats(response);
     return;
   }
-    console.log('Recieved request: ' + request.url);
-    addPathToStats(request.url);
-    response.end('1 success');
+  addPathToStats(request.url);
+  response.end('1 success');
 }
 
 var server = http.createServer(handleRequest);

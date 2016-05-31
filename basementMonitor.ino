@@ -24,8 +24,11 @@ Adafruit_BME280 bme(BME_CS, BME_MOSI, BME_MISO,  BME_SCK);
 Adafruit_WINC1500 WiFi(WINC_CS, WINC_IRQ, WINC_RST);
 Adafruit_WINC1500Client client;
 
-//char ssid[] defined in Credentials.h your network SSID (name)
-//char pass[] defined in Credentials.h your network password
+// Credentials.h should look like this:
+//
+//const char ssid[] = "My Wifi Name";     //  your network SSID (name)
+//const char pass[] = "totallySecretPassword";  // your network password
+
 int status = WL_IDLE_STATUS;     // the Wifi radio's status
 char server[] = "192.168.1.15";
 #define SEND_PERIOD 15*60*1000/100 //works out to 9 seconds
