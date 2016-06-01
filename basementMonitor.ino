@@ -30,7 +30,7 @@ Adafruit_WINC1500Client client;
 //const char pass[] = "totallySecretPassword";  // your network password
 
 int status = WL_IDLE_STATUS;     // the Wifi radio's status
-char server[] = "192.168.1.15";
+char server[] = "data.sparkfun.com";
 #define SEND_PERIOD 15*60*1000/100 //works out to 9 seconds
 
 void setup() {
@@ -40,9 +40,9 @@ void setup() {
   #endif
 
   Serial.begin(9600);
-  while (!Serial) {
-    ; // wait for serial port to connect. Needed for native USB port only
-  }
+//  while (!Serial) {
+//    ; // wait for serial port to connect. Needed for native USB port only
+//  }
     // check for the presence of the shield:
   if (WiFi.status() == WL_NO_SHIELD) {
     Serial.println("WiFi shield not present");
@@ -78,8 +78,8 @@ void loop() {
 
     Serial.println("===Sensor Data===");
     Serial.print("Temperature = ");
-    int degC = bme.readTemperature();
-    int degF = (int)((degC * 1.8 )) + 32;
+    float degC = bme.readTemperature();
+    float degF = ((degC * 1.8 )) + 32;
     int pressure = bme.readPressure();
     int humidity = bme.readHumidity();
     Serial.print(degC);
@@ -108,23 +108,49 @@ void loop() {
     delay(SEND_PERIOD);
 }
 
-void sendData(int temp, int humidity, int pressure){
-  if (client.connect(server, 8080)) {
+void sendData(float temp, int humidity, int pressure){
+  int success = client.connect(server, 80);
+  if (success) {
     Serial.print("connected to server: ");
     Serial.println(server);
     // Make a HTTP request:
     client.print("GET ");
-    client.print("/?temp=");
+    client.print("/input/XGY7yw3OM8tznv85g7Oq?temp=");
     client.print(temp);
     client.print("&humidity=");
     client.print(humidity);
     client.print("&pressure=");
     client.print(pressure);
+    client.print("&private_key=");
+    client.print(privateKey);
     client.println(" HTTP/1.1");
     client.print("Host: sensor-bot"); client.println();
     client.println("Connection: close");
     client.println();
     client.flush();
+  } else {
+    Serial.println("==Failed to connect:===");
+    Serial.print(success);
+    Serial.println();
+    Serial.println("====");
+    Serial.println();
+    Serial.print("connected to server: ");
+    Serial.println(server);
+    Serial.print("GET ");
+    Serial.print("/input/XGY7yw3OM8tznv85g7Oq?temp=");
+    Serial.print(temp);
+    Serial.print("&humidity=");
+    Serial.print(humidity);
+    Serial.print("&pressure=");
+    Serial.print(pressure);
+    Serial.print("&private_key=");
+    Serial.print(privateKey);
+    Serial.println(" HTTP/1.1");
+    Serial.print("Host: sensor-bot"); Serial.println();
+    Serial.println("Connection: close");
+    Serial.println();
+    Serial.println();
+    Serial.println();
   }
 
   Serial.println("<-----[rx]");

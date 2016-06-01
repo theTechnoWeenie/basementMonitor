@@ -8,7 +8,6 @@ function outputStats(response) {
 }
 
 function addPathToStats(path) {
-  console.log(stats)
   if (stats[path]){
     stats[path] += 1;
   } else {
@@ -21,6 +20,7 @@ function handleRequest(request, response){
     outputStats(response);
     return;
   }
+  console.log('Recieved request: ' + request.url);
   addPathToStats(request.url);
   response.end('1 success');
 }
